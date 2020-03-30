@@ -22,4 +22,65 @@ if __name__ == "__main__":
     for question, inf_answers in list_of_questions_and_answers:
         print(question)
         print(inf_answers)
+
+        # my init attempts at doing scoring below. 
+        acceptable_endings = ['"', ".", ")", "3", "?", "!", ":"]
+
+        ACCEPTABLE_END_VAL = 5
+
+
+        hscores = {}  # answer: score
+        for answer in inf_answers:
+            i_count = answer.count("I")-1
+            if i_count < 0: 
+                i_count = 0
+            acceptable_end = 0
+            lowered_answer = answer.lower()
+            repetitions = 1
+
+
+            if answer[-1] in acceptable_endings:
+                acceptable_end = ACCEPTABLE_END_VAL
+
+            words = [i.strip() for i in lowered_answer.split(" ")]
+            answer_length = len(words)
+            for word in words:
+                c = words.count(word)
+                if c > 1:
+                    repetitions += c-1
+                    #print(word)
+
+
+            #print(words)
+            #print(repetitions)
+            hscore = (answer_length+acceptable_end) / (repetitions+i_count)
+            #print(hscore)
+            hscores[answer] = hscore
+
+
+        #print(hscores)
+        sorted_hscores = {k: v for k, v in sorted(hscores.items(), key=lambda item: item[1])}
+        #print(sorted_hscores)
+
+        # get a slice of the best:  REQUIRES PYTHON 3.6+ (SORTED DICT)
+        top_n = [k for k in sorted_hscores][-5:]
+
+        #$print(max(sorted_hscores, key=sorted_hscores.get))
+        for i in range(5):
+            print()
+        print("Some top choices:")
+        print(question)
+        for ans in top_n:
+            print(">", ans)
+        for i in range(7):
+            print()
+        print(10*"-")
+        print("...Final response")
+        print()
+        print(question)
+        print(">", random.choice(top_n))
+        print(10*"-")
+        print()
+        print()
+
         
